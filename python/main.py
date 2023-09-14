@@ -87,6 +87,3 @@ def run(input):
     response = agent({"input": input + instruction})
     result = response["output"]
     return result
-
-
-print(run("what is the capital of cordova"))
