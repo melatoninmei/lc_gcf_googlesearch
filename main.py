@@ -1,21 +1,11 @@
 import functions_framework
-from langchain.chat_models import ChatOpenAI
-
-# To help construct our Chat Messages
-from langchain.schema import HumanMessage
-from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
-
-# To parse outputs and get structured data back
-from langchain.output_parsers import StructuredOutputParser, ResponseSchema, PydanticOutputParser
 
 # Helpers
 import os
-import json
 
 from langchain.llms import OpenAI
 
 # Agent imports
-from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 
 # Tool imports
@@ -23,14 +13,11 @@ from langchain.agents import Tool
 from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import TextRequestsWrapper
 
-GOOGLE_CSE_ID = os.getenv('GOOGLE_CSE_ID', '86dc43f4082c74752')
+GOOGLE_CSE_ID = os.getenv('GOOGLE_CSE_ID')
 GOOGLE_API_KEY = os.getenv(
-    'GOOGLE_API_KEY', 'AIzaSyApvFgLwiXhzdQq-WkKnW8bAEAAz040GPA')
+    'GOOGLE_API_KEY')
 openai_api_key = os.getenv(
-    'OPENAI_API_KEY', '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')
-
-# chat = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo",
-#                   openai_api_key=openai_api_key)
+    'OPENAI_API_KEY')
 
 llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
 
@@ -57,6 +44,7 @@ agent = initialize_agent(toolkit, llm, agent="zero-shot-react-description",
 
 @functions_framework.http
 def hello_http(request):
+    print("Recieved", request.method, request.get_json())
     if request.method == "OPTIONS":
         headers = {
             "Access-Control-Allow-Origin": "*",
@@ -69,7 +57,11 @@ def hello_http(request):
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Origin': '*'
     }
-    response = "todo"
+
+    input = request.get_json().get("question")
+    if not input or not isinstance(input, str) or len(input) == 0:
+        return ("Invalid question", 400, headers)
+    response = run(input)
     return (response, 200, headers)
 
 
