@@ -82,6 +82,13 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
     ./deploy.sh
     ```
 
+## Logs 🪵
+
+```
+source env.sh
+gcloud functions logs read google-search-ai-http
+```
+
 ## Run locally 👩🏻‍💻
 
 1. Install dependencies
@@ -93,6 +100,7 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
 2. Start up the server
 
     ```
+    source env.sh
     functions-framework-python --target hello_http --debug
     ```
 
