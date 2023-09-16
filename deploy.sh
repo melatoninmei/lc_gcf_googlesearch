@@ -1,14 +1,13 @@
 #!/bin/bash
-
-# Check if the environment variable is set
-if [ -z "$REGION" ]; then
-  # If not set, use the default value
-  REGION="australia-southeast1"
-fi
-
 source env.sh
 
-gcloud functions deploy python-http-function \
+# Check if all the the environment variable are set
+if [ -z "$REGION" ] || [ -z "$GOOGLE_CSE_ID" || -z "$GOOGLE_API_KEY" || -z "OPENAI_API_KEY" ]; then
+  echo "Please set all the environment variables in env.sh"
+  exit 1
+fi
+
+gcloud functions deploy google-search-ai-http \
     --gen2 \
     --runtime=python311 \
     --region=$REGION \
