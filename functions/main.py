@@ -1,4 +1,11 @@
-import functions_framework
+# Welcome to Cloud Functions for Firebase for Python!
+# To get started, simply uncomment the below code or create your own.
+# Deploy with `firebase deploy`
+
+from firebase_functions import https_fn
+from firebase_functions.params import SecretParam
+
+from firebase_admin import initialize_app
 
 # Helpers
 import os
@@ -13,37 +20,43 @@ from langchain.agents import Tool
 from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import TextRequestsWrapper
 
-GOOGLE_CSE_ID = os.getenv('GOOGLE_CSE_ID')
-GOOGLE_API_KEY = os.getenv(
+GOOGLE_CSE_ID = SecretParam('GOOGLE_CSE_ID')
+GOOGLE_API_KEY = SecretParam(
     'GOOGLE_API_KEY')
-openai_api_key = os.getenv(
+openai_api_key = SecretParam(
     'OPENAI_API_KEY')
 
-llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
+
+# @https_fn.on_request()
+# def on_request_example(req: https_fn.Request) -> https_fn.Response:
+#     return https_fn.Response("Hello world!")
 
 
-search = GoogleSearchAPIWrapper(
-    google_api_key=GOOGLE_API_KEY, google_cse_id=GOOGLE_CSE_ID)
-requests = TextRequestsWrapper()
-toolkit = [
-    Tool(
-        name="Search",
-        func=search.run,
-        description="useful for when you need to search google to answer questions about current events"
-    ),
-    Tool(
-        name="Requests",
-        func=requests.get,
-        description="Useful for when you to make a request to a URL"
-    ),
-]
-
-agent = initialize_agent(toolkit, llm, agent="zero-shot-react-description",
-                         verbose=True, return_intermediate_steps=True)
-
-
-@functions_framework.http
+@https_fn.on_request(secrets=["GOOGLE_CSE_ID", "GOOGLE_API_KEY", "OPENAI_API_KEY"])
 def hello_http(request):
+    llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY.value())
+
+    search = GoogleSearchAPIWrapper(
+        google_api_key=GOOGLE_API_KEY.value(), google_cse_id=GOOGLE_CSE_ID.value())
+    requests = TextRequestsWrapper()
+    toolkit = [
+        Tool(
+            name="Search",
+            func=search.run,
+            description="useful for when you need to search google to answer questions about current events"
+        ),
+        Tool(
+            name="Requests",
+            func=requests.get,
+            description="Useful for when you to make a request to a URL"
+        ),
+    ]
+
+    agent = initialize_agent(toolkit, llm, agent="zero-shot-react-description",
+                             verbose=True, return_intermediate_steps=True)
+
+    initialize_app()
+
     print("Recieved", request.method, request.get_json())
     if request.method == "OPTIONS":
         headers = {

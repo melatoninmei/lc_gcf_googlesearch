@@ -1,0 +1,6 @@
+functions-framework==3.*
+langchain
+openai
+google-api-python-client
+python-dotenv
+firebase-functions
