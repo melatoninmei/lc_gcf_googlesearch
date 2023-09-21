@@ -56,6 +56,8 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
 
 2. Populate and source env file with credentials
 
+See secrets section.
+
     Google CSE ID: [Google Programmable Search Engine](https://programmablesearchengine.google.com/controlpanel/all)
 
     Google API Key: [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
@@ -78,9 +80,17 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
 
 4. Deploy
 
-    ```
-    ./deploy.sh
-    ```
+
+```
+firebase init
+firebase deploy
+```
+
+## Secrets
+
+```
+firebase functions:secrets:set OPENAI_API_KEY
+```
 
 ## Logs 🪵
 
