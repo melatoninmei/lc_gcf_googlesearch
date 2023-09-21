@@ -6,3 +6,4 @@ __pycache__/
 functions/venv/
 functions/__pycache__/
 ui-debug.log
+functions/.secret.local
