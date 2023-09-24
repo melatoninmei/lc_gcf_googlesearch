@@ -14,10 +14,8 @@ from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import TextRequestsWrapper
 
 GOOGLE_CSE_ID = os.getenv('GOOGLE_CSE_ID')
-GOOGLE_API_KEY = os.getenv(
-    'GOOGLE_API_KEY')
-openai_api_key = os.getenv(
-    'OPENAI_API_KEY')
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+openai_api_key = os.getenv('OPENAI_API_KEY')
 
 llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
 
@@ -43,13 +41,13 @@ agent = initialize_agent(toolkit, llm, agent="zero-shot-react-description",
 
 
 @functions_framework.http
-def hello_http(request):
-    print("Recieved", request.method, request.get_json())
+def google_search(request):
     if request.method == "OPTIONS":
+        print("Recieved preflight request")
         headers = {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
         }
         return ('', 204, headers)
 

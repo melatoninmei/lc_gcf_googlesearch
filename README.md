@@ -54,7 +54,7 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
 
 1. Clone this repository to your local machine:
 
-2. Populate and source env file with credentials
+2. Create secrets
 
     Google CSE ID: [Google Programmable Search Engine](https://programmablesearchengine.google.com/controlpanel/all)
 
@@ -62,13 +62,11 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
 
     Get an OpenAI key here: [Open AI API Keys - you need an account with loaded credits](https://platform.openai.com/account/api-keys)
 
-    `touch env.sh`:
+    ```
+    firebase functions:secrets:set GOOGLE_API_KEY
+    ```
 
-    ```
-    export GOOGLE_CSE_ID="XXXXXXXXXXXXXXXXX"
-    export GOOGLE_API_KEY="XXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXX"
-    export OPENAI_API_KEY="XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    ```
+    Repeat for each `GOOGLE_CSE_ID`, `GOOGLE_API_KEY`, `OPENAI_API_KEY``
 
 3. Give executable permissions to deploy
 
@@ -82,10 +80,15 @@ This is a fork of [LC_GCF](https://github.com/kulaone/LC_GCF)
     ./deploy.sh
     ```
 
+5. Deploy hosting
+
+    ```
+    firebase deploy
+    ```
+
 ## Logs 🪵
 
 ```
-source env.sh
 gcloud functions logs read google-search-ai-http
 ```
 
